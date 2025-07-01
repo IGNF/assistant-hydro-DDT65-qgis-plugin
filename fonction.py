@@ -30,10 +30,11 @@ def ecrire_debut_fichier(text):
             file.write(text + text_origine)
 
 def afficheDoc():
-    if not os.path.isfile(os.path.dirname(__file__) + "/contribution directe (hydro).docx"):
+    fichier = os.path.join(os.path.dirname(__file__), "contribution directe (hydro).pdf")
+    if not os.path.isfile(fichier):
         afficheerreur("La documentation est introuvable", "Information")
     else:
-        os.popen(os.path.dirname(__file__) + "/contribution directe (hydro).docx")
+        subprocess.Popen(['start', '', fichier], shell=True)
 
 def afficherlog():
     fic = os.path.dirname(__file__) + "/log.txt"
