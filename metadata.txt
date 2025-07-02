@@ -6,7 +6,7 @@
 name=IGN Contribution directe BDUni (HYDRO)
 qgisMinimumVersion=3.0
 description=plugin de contribution direct sur le thème hydrographique
-version=0.3
+version=1.0.0
 author=Gérôme PECHEUR (IGN)
 email=gerome.pecheur@ign.fr
 

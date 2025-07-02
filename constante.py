@@ -1,6 +1,7 @@
 LAYER_HYDRO = "troncon_hydrographique"
 
-TITRE_INTERFACE = "Contribution directe BDUni (HYDRO) v0.3"
+TITRE_INTERFACE = "Contribution directe BDUni (HYDRO)"
+VERSION = "v1.0.0"
 
 PLUGIN_ESPACE_CO = "ign_espace_collaboratif"
 

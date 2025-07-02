@@ -682,7 +682,7 @@ class changeAttribut:
 
             self.dlgAProposDe = Aproposde()
             self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint)
-            self.dlgAProposDe.setWindowTitle(TITRE_INTERFACE)
+            self.dlgAProposDe.setWindowTitle(f"{TITRE_INTERFACE}  {VERSION}")
             self.dlgAProposDe.setStyleSheet(FOND_DIAL)
 
             self.dlgEditIdPE = EditIDPE()
@@ -697,7 +697,7 @@ class changeAttribut:
 
 
 
-            self.dlg.setWindowTitle(TITRE_INTERFACE)
+            self.dlg.setWindowTitle(f"{TITRE_INTERFACE}  {VERSION}")
             self.initialiselabel()
 
             self.dlg.labelwarning.setStyleSheet(CUSTOM_WIDGETS[2])
