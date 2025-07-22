@@ -1,7 +1,7 @@
 LAYER_HYDRO = "troncon_hydrographique"
 
 TITRE_INTERFACE = "Contribution directe BDUni (HYDRO)"
-VERSION = "v1.0.0"
+VERSION = "v1.1.0"
 
 PLUGIN_ESPACE_CO = "ign_espace_collaboratif"
 
@@ -26,7 +26,7 @@ FOND_DIAL = "background-color:#d3ddff"
 CUSTOM_WIDGETS = ("background-color: #ff8080 ;font-weight: bold",
                   "background-color: #2ab51a ;font-weight: bold",
                   "background-color: None",
-                  "background-color: #b2c3ff",
+                  "background-color: #dcdcdc",
                   "background-color: #df920d"
                   )
 

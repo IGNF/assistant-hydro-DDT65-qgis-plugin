@@ -40,6 +40,13 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QLabel" name="label_14">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;v1.1.0 (août 2025) :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="label_11">
       <property name="font">
        <font>
@@ -92,6 +99,13 @@
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_15">
+      <property name="text">
+       <string>Nouveau mode de transaction </string>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QLabel" name="label_12">
       <property name="text">

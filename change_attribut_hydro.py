@@ -288,73 +288,6 @@ class changeAttribut:
     def afficheMessageBar(self, message):
         self.iface.messageBar().pushMessage("Info", message, level=Qgis.Info, duration=5)
 
-    def selAvantModif(self):
-        for sel in self.listeSelection:
-            attr = sel.attributes()
-
-            self.dicoAttributsAvantModif[attr[self.idcleabs]] = [attr[self.idnature],
-                                                                 attr[self.idposol],
-                                                                 attr[self.idinventairePE],
-                                                                 attr[self.idinventaireBCAE],
-                                                                 attr[self.idpe],
-                                                                 attr[self.idbcae]]
-        return self.dicoAttributsAvantModif
-
-    def undo(self):
-        # TODO undo
-        if len(self.dicoAttributsAvantModif) == 0:
-            return
-
-        if not affichemessageAvertissement("Voulez vous vraiment annuler la dernière modification ?", "Attention...."):
-            return
-
-        QGuiApplication.setOverrideCursor(Qt.WaitCursor)
-        self.layer.startEditing()
-        log = ""
-
-        for cleabs, valeur in self.dicoAttributsAvantModif.items():
-            # recuperation de l'id de l'objet (requete sur la cleabs)
-            expr = QgsExpression("{} = '{}'".format(CLEABS, cleabs))
-            objiterator = self.layer.getFeatures(QgsFeatureRequest(expr))
-            ident = [i.id() for i in objiterator]
-
-            # recuperation des attributs actuels du tronçon pour gerer le log
-            entite = self.layer.getFeature(ident[0])
-
-            log += datetime.today().strftime('%d %B %Y %H:%M:%S') + "\t"
-            log += cleabs + "\n"
-            # on modifie que les changements
-            if entite[NATURE] != valeur[0]:
-                self.layer.changeAttributeValue(ident[0], self.idnature, str(valeur[0]))
-                log += "\t" + NATURE + " : " + str(entite[NATURE]) + " ----> " + str(valeur[0]) + "\n"
-            if entite[POS_SOL] != valeur[1]:
-                self.layer.changeAttributeValue(ident[0], self.idposol, str(valeur[1]))
-                log += "\t" + POS_SOL + " : " + str(entite[POS_SOL]) + " ----> " + str(valeur[1]) + "\n"
-            if entite[INVENT_PE] != valeur[2]:
-                self.layer.changeAttributeValue(ident[0], self.idinventairePE, str(valeur[2]))
-                log += "\t" + INVENT_PE + " : " + str(entite[INVENT_PE]) + " ----> " + str(valeur[2]) + "\n"
-            if entite[INVENT_BCAE] != valeur[3]:
-                self.layer.changeAttributeValue(ident[0], self.idinventaireBCAE, str(valeur[3]))
-                log += "\t" + INVENT_BCAE + " : " + str(entite[INVENT_BCAE]) + " ----> " + str(valeur[3]) + "\n"
-            if entite[ID_PE] != valeur[4]:
-                self.layer.changeAttributeValue(ident[0], self.idpe, str(valeur[4]))
-                log += "\t" + ID_PE + " : " + str(entite[ID_PE]) + " ----> " + str(valeur[4]) + "\n"
-            if entite[ID_BCAE] != valeur[5]:
-                self.layer.changeAttributeValue(ident[0], self.idbcae, str(valeur[5]))
-                log += "\t" + ID_BCAE + " : " + str(entite[ID_BCAE]) + " ----> " + str(valeur[5]) + "\n"
-            log += "\n"
-
-        # ecrire le log
-        # ecrirelog(log)
-        ecrire_debut_fichier(log)
-        self.layer.commitChanges()
-        ecrire_debut_fichier("Numéro de la transaction = " + str(getidtransaction()) + "\n")
-        self.dlg.pushButtonUndo.setEnabled(False)
-        self.re_seltroncon(self.selectiontotal)
-        self.iface.actionZoomToSelected().trigger()
-        QGuiApplication.restoreOverrideCursor()
-        self.dicoAttributsAvantModif.clear()
-
     def validerLaTransaction(self):
 
         # TODO validerLaTransaction
@@ -364,28 +297,13 @@ class changeAttribut:
         if len(self.dicoAttributs) == 0:
             return
 
-        if len(self.listeSelection) == 1: strTroncon = "tronçon"
-        else: strTroncon = "tronçons"
-        if not affichemessageAvertissement(
-                f"Voulez vous validez les modification sur {len(self.listeSelection)} {strTroncon} ?", "Validation"):
-            return
-
-        # on vide les modifs avant la transaction sinon l'undo annule depuis le dernier undo
-        self.dicoAttributsAvantModif.clear()
-
-        # sauvegarde des attributs avant la transaction
-        self.selAvantModif()
-
         self.layer.startEditing()
 
-        log = ""
         ischange = False
         locale.setlocale(locale.LC_TIME, 'fr_FR')
 
         for selection in self.listeSelection:
             attr = selection.attributes()
-            log += datetime.today().strftime('%d %B %Y %H:%M:%S') + "\t"
-            log += attr[self.idcleabs] + "\n"
             for cle in self.dicoAttributs:
                 idchamps = self.layer.fields().indexFromName(cle)
                 # on ne modifie que si l'attribut a vraiment changé
@@ -393,29 +311,10 @@ class changeAttribut:
                 if str(attr[idchamps]) != str(self.dicoAttributs[cle]):
                     ischange = True
                     self.layer.changeAttributeValue(selection.id(), idchamps, str(self.dicoAttributs[cle]))
-                    log += "\t" + cle + " : " + str(attr[idchamps]) + " ----> " + str(self.dicoAttributs[cle]) + "\n"
-            log += "\n"
 
-        self.layer.commitChanges()
-
-        # à la fin on re-selectionne les troncons
-        self.re_seltroncon(self.selectiontotal)
-        if ischange:
-            self.dlg.pushButtonUndo.setEnabled(True)
-            # ecrirelog(log)
-            ecrire_debut_fichier(log)
-            ecrire_debut_fichier("Numéro de la transaction = " + str(getidtransaction()) + "\n")
-            self.afficheMessageBar(f"Les modifications ont été effectués sur : {self.nbselection} objet(s)")
+        self.afficheMessageBar(f"Les modifications ont été effectués sur : {self.nbselection} objet(s)")
 
         self.dicoAttributs.clear()
-        # self.isAttributsmodifiy = False
-
-    def re_seltroncon(self, selectiontotal):
-
-        for selection in selectiontotal:
-            attr = selection.attributes()
-            self.layer.selectByExpression("{} = '{}'".format("cleabs", attr[self.idcleabs]),
-                                          QgsVectorLayer.AddToSelection)
 
     def initialiselabel(self):
         # fond gris
@@ -425,8 +324,6 @@ class changeAttribut:
                     label.objectName() != "labelCoulSel"):
                 label.setStyleSheet(CUSTOM_WIDGETS[3])
 
-        self.dlg.lineEditCleabs.setStyleSheet(CUSTOM_WIDGETS[3])
-        self.dlg.lineEditToponyme.setStyleSheet(CUSTOM_WIDGETS[3])
         self.dlg.lineEditIdPE.setStyleSheet(CUSTOM_WIDGETS[2])
         self.dlg.lineEditIdBCAE.setStyleSheet(CUSTOM_WIDGETS[2])
 
@@ -515,7 +412,6 @@ class changeAttribut:
         self.listeSelection = self.layer.selectedFeatures()
         self.nbselection = self.layer.selectedFeatureCount()
         self.dlg.labelNbSelection.setText(str(self.nbselection))
-        self.dlg.labelwarning.hide()
         # activation du btn qui s'il y a un changement d'attributs
         self.dlg.pushButtonValiderTransaction.setEnabled(False)
 
@@ -588,7 +484,6 @@ class changeAttribut:
 
         self.selectiontotal = None
         self.dicoAttributs = {}
-        self.dicoAttributsAvantModif = {}
         self.layer = None
         self.nbselection = None
         self.listeSelection = None
@@ -670,9 +565,7 @@ class changeAttribut:
         if self.first_start:
             self.first_start = False
             self.dlg = changeAttributDialog()
-            self.dlg.setStyleSheet(FOND_DIAL)
-
-
+            # self.dlg.setStyleSheet(FOND_DIAL)
 
             self.cheminpluscourt = cheminpluscourt(self.iface, self.layer)
 
@@ -683,29 +576,20 @@ class changeAttribut:
             self.dlgAProposDe = Aproposde()
             self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint)
             self.dlgAProposDe.setWindowTitle(f"{TITRE_INTERFACE} {VERSION}")
-            self.dlgAProposDe.setStyleSheet(FOND_DIAL)
+            # self.dlgAProposDe.setStyleSheet(FOND_DIAL)
 
             self.dlgEditIdPE = EditIDPE()
-            self.dlgEditIdPE.setStyleSheet(FOND_DIAL)
+            # self.dlgEditIdPE.setStyleSheet(FOND_DIAL)
             self.dlgEditIdPE.pushButtonOK.clicked.connect(self.recup_id_pe)
             self.dlgEditIdPE.pushButtonAnnuler.clicked.connect(self.ferme_dial)
 
             self.dlgEditIdBCAE = EditIDBCAE()
-            self.dlgEditIdBCAE.setStyleSheet(FOND_DIAL)
+            # self.dlgEditIdBCAE.setStyleSheet(FOND_DIAL)
             self.dlgEditIdBCAE.pushButtonOK.clicked.connect(self.recup_id_bcae)
             self.dlgEditIdBCAE.pushButtonAnnuler.clicked.connect(self.ferme_dial)
 
-
-
             self.dlg.setWindowTitle(f"{TITRE_INTERFACE} {VERSION}")
             self.initialiselabel()
-
-            self.dlg.labelwarning.setStyleSheet(CUSTOM_WIDGETS[2])
-            self.dlg.labelwarning.setStyleSheet("color:red ; font-weight: bold")
-            self.dlg.labelwarning.setText("")
-
-            # bouton log
-            self.dlg.pushButtonLog.clicked.connect(afficherlog)
 
             # evenement de changement de selection pour actualiser la selection des Qcombobox
             self.iface.mapCanvas().selectionChanged.connect(self.actualiserSelection)
@@ -749,10 +633,6 @@ class changeAttribut:
             self.dlg.pushButtonAProposeDe.clicked.connect(self.afficheAProposeDe)
             # bouton afficher la doc
             self.dlgAProposDe.pushButtonAffichedoc.clicked.connect(afficheDoc)
-
-            # bouton UNDO
-            self.dlg.pushButtonUndo.setEnabled(False)
-            self.dlg.pushButtonUndo.clicked.connect(self.undo)
 
             self.dlg.pushButtonNatureCanal.clicked.connect(self.natureCanal)
             self.dlg.pushButtonNatureConduitBuse.clicked.connect(self.natureConduitBuse)

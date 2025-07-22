@@ -6,7 +6,7 @@
 name=IGN Contribution directe BDUni (HYDRO)
 qgisMinimumVersion=3.0
 description=plugin de contribution direct sur le thème hydrographique
-version=1.0.0
+version=1.1.0
 author=Gérôme PECHEUR (IGN)
 email=gerome.pecheur@ign.fr
 
@@ -21,6 +21,7 @@ repository=http://repo
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 changelog=
+	1.1.0:	Nouveau mode de transaction
 	1.0.0:	Première version diffusée
 	0.3:	Mode édition des attributs identifiants IPE et BCAE
 		Adapatation de l'attribut "inventaire police de l'eau" au changement de modèle 
