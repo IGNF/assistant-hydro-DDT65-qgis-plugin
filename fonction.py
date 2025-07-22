@@ -7,10 +7,6 @@ from qgis.core import QgsCoordinateReferenceSystem, QgsProject
 
 import subprocess
 
-FOND_DIAL = "background-color:#d3ddff"
-
-
-
 def ecrirelog(text):
     ficlog = open(os.path.dirname(__file__) + "/log.txt", "a")
     ficlog.write(text)
@@ -52,7 +48,6 @@ def affiches_spec_bdtopo():
 
 def afficheerreur(text, titre="Erreur"):
     msg = QMessageBox()
-    msg.setStyleSheet(FOND_DIAL)
     msg.setIcon(QMessageBox.Warning)
     msg.setWindowTitle(titre)
     msg.setStandardButtons(QMessageBox.Ok)
@@ -64,7 +59,6 @@ def afficheerreur(text, titre="Erreur"):
 def affichemessageAvertissement(text, titre):
     msg = QMessageBox()
     msg.setIcon(QMessageBox.Warning)
-    msg.setStyleSheet(FOND_DIAL)
     msg.setWindowTitle(titre)
     msg.setText(text)
     btnAnnuler = msg.addButton("Annuler", QMessageBox.YesRole)
