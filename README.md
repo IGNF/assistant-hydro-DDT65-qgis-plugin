@@ -1,2 +1,4 @@
-# assistant-route-plugin-qgis
-Aide à la saisie des attributs sur les tronçons de route (jeux d'attributs)
+# Assistant HYDRO
+
+Ce plugin est une aide à la modification sémantique des tronçons hydrographique
+
