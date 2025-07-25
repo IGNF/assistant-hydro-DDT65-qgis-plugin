@@ -3,6 +3,8 @@ __pycache__/
 test/
 scripts/
 help/
+i18n/
+.idea/
 
 
 GitGestion.exe

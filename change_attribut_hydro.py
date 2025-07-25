@@ -649,10 +649,8 @@ class changeAttribut:
             self.dlg.pushButtonInventBCAEVrai.clicked.connect(self.invBCAEVrai)
             self.dlg.pushButtonInventBCAEFaux.clicked.connect(self.invBCAEFaux)
 
-            # garde la fenêtre en premier plan
-            self.dlg.setWindowFlags(Qt.WindowStaysOnTopHint)
-
-            # show the dialog
+        self.dlg.setParent(self.iface.mainWindow())
+        self.dlg.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.WindowCloseButtonHint)
         self.dlg.show()
 
 
