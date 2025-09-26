@@ -565,7 +565,6 @@ class changeAttribut:
         if self.first_start:
             self.first_start = False
             self.dlg = changeAttributDialog()
-            # self.dlg.setStyleSheet(FOND_DIAL)
 
             self.cheminpluscourt = cheminpluscourt(self.iface, self.layer)
 
@@ -574,9 +573,8 @@ class changeAttribut:
             self.dlg.mColorButton.colorChanged.connect(self.colorchange)
 
             self.dlgAProposDe = Aproposde()
-            self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint)
+            self.dlgAProposDe.setWindowFlags(Qt.WindowStaysOnTopHint|Qt.WindowTitleHint | Qt.WindowCloseButtonHint)
             self.dlgAProposDe.setWindowTitle(f"{TITRE_INTERFACE} {VERSION}")
-            # self.dlgAProposDe.setStyleSheet(FOND_DIAL)
 
             self.dlgEditIdPE = EditIDPE()
             # self.dlgEditIdPE.setStyleSheet(FOND_DIAL)
@@ -652,6 +650,12 @@ class changeAttribut:
         self.dlg.setParent(self.iface.mainWindow())
         self.dlg.setWindowFlags(Qt.Dialog | Qt.WindowTitleHint | Qt.WindowCloseButtonHint)
         self.dlg.show()
+
+        # Run the dialog event loop
+        result = self.dlg.exec_()
+        # # See if OK was pressed
+        if result == 0:
+            self.dlgAProposDe.close()
 
 
 
