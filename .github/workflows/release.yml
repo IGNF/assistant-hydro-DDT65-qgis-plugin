@@ -21,7 +21,12 @@ jobs:
 
       - name: Build plugin zip
         run: |
-          zip -r "IGN_assistant-hydro-DDT65.zip" . -x ".git/*" ".github/*"
+          mkdir -p IGN_assistant-hydro-DDT65
+          rsync -av --progress . IGN_assistant-hydro-DDT65/ \
+            --exclude .git \
+            --exclude .github \
+            --exclude IGN_assistant-hydro-DDT65
+          zip -r IGN_assistant-hydro-DDT65.zip IGN_assistant-hydro-DDT65
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
